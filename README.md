@@ -203,7 +203,7 @@ client.lookup("8.8.8.8", format="jsonp", callback="cbFunction")
 
 | Parameter  | Type  | Required | Accepted Values                         | Description                                                                  |
 | ---------- | ----- | -------- | --------------------------------------- | ---------------------------------------------------------------------------- |
-| `ip`       | `str` | Yes*     | IPv4 / IPv6                             | IP address to lookup. If omitted, your **own IP** is detected automatically. |
+| `ip`       | `str` | Yes*     | IPv4 / IPv6                             | IP address to lookup. If ```check```, your **own IP** is detected automatically. |
 | `format`   | `str` | Optional | `json` (default), `xml`, `yml`, `jsonp` | Response format. Defaults to JSON.                                           |
 | `callback` | `str` | Optional | Alphanumeric + `_` (max 64 chars)       | JSONP callback function name. **Only valid when `format="jsonp"`**.          |
 
