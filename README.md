@@ -61,6 +61,18 @@ print(data)
 
 ```
 
+### Lookup your IP
+
+```python
+from ip2geo import Ip2Geo
+
+client = Ip2Geo("YOUR_API_KEY")
+
+data = client.lookup("check")
+
+print(data)
+
+
 ## API Response
 
 ```json
