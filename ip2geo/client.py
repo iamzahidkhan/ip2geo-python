@@ -16,15 +16,12 @@ class Ip2Geo:
     ):
         params = {}
 
-        # API key (optional, API handles missing key response)
         if self.api_key:
             params["key"] = self.api_key
 
-        # format is optional (defaults to JSON if not provided)
         if format:
             params["format"] = format
 
-        # callback only valid for jsonp
         if callback:
             if format != "jsonp":
                 raise ValueError("callback can only be used when format='jsonp'")
@@ -32,23 +29,22 @@ class Ip2Geo:
 
         url = f"{self.BASE_URL}/{ip}" if ip else self.BASE_URL
 
-        response = requests.get(url, params=params, timeout=self.timeout)
-
-        # HTTP-level error (network / server)
-        if not response.ok:
-            raise RuntimeError(
-                f"Ip2Geo API error {response.status_code}: {response.text}"
+        try:
+            response = requests.get(
+                url,
+                params=params,
+                timeout=self.timeout,
             )
+        except requests.RequestException as e:
+            # TRUE transport failure
+            raise RuntimeError("Unable to reach Ip2Geo API") from e
 
-        # JSON response handling
-        if format in (None, "json"):
-            data = response.json()
+        # If JSON is expected (default or explicit)
+        if format is None or format == "json":
+            try:
+                return response.json()
+            except ValueError:
+                raise RuntimeError("Expected JSON but received invalid response")
 
-            if not data.get("success", False):
-                # API-level error (eg: missing API key)
-                raise RuntimeError(data.get("error", "Unknown API error"))
-
-            return data
-
-        # Non-JSON formats return raw text
+        # XML / YAML / JSONP → raw text
         return response.text
